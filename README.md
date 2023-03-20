@@ -28,6 +28,8 @@ This solution works well in Windows, since each DLL has it's own runtime environ
 
 But it fails on Linux. When `libsdk_b.so` invokes `SSL_library_init`, it goes into `libssl_a.so`, which leads to `SIGSEGV`.
 
+I'm sure `libsdk_b.so` is linked to `libssl_b.so` correctly, since when I wrote wrong code in `libssl_a.so`, it didn't cause `libsdk_b.so` to build failure. But the codepath went wrong in runtime, so I think it may cased by link stage for main app, from some mechanisms similar to `-fPIE`.
+
 ### dlopen
 
 Furthermore, I tried to load `libsdk_a.so` and `libsdk_b.so` dynamically at runtime, instead of linking them in compile time.
