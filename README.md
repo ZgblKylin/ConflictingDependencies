@@ -16,7 +16,7 @@ Main App -- libsdk_a.so -- libssl_a.so
 
 Both SDK A and SDK B depends on openssl, but with different versions.
 
-Since openssl use a global context internally, it'll initialized twice in different SDK in single process, and shared between both SDKs, which will result in runtime error.
+Since openssl use a global context internally, it'll be initialized twice in different SDK at same process, and shared between both SDKs, which will result in runtime error.
 
 We should isolate the two different openssl library in separaed execution environment.
 
@@ -28,13 +28,13 @@ This solution works well in Windows, since each DLL has it's own runtime environ
 
 But it fails on Linux. When `libsdk_b.so` invokes `SSL_library_init`, it goes into `libssl_a.so`, which leads to `SIGSEGV`.
 
-I'm sure `libsdk_b.so` is linked to `libssl_b.so` correctly, since when I wrote wrong code in `libssl_a.so`, it didn't cause `libsdk_b.so` to build failure. But the codepath went wrong in runtime, so I think it may cased by link stage for main app, from some mechanisms similar to `-fPIE`.
+I'm sure `libsdk_b.so` is linked to `libssl_b.so` correctly, since when I wrote wrong code in `libssl_a.so`, it didn't cause `libsdk_b.so` to build failure. But the codepath went wrong in runtime, so I think it may cased by link stage for main app, from some unknown mechanisms similar to `-fPIE`.
 
 ### dlopen
 
 Furthermore, I tried to load `libsdk_a.so` and `libsdk_b.so` dynamically at runtime, instead of linking them in compile time.
 
-That means, `libwrapper_a.so` and `libwrapper_b.so` do not link to sdk and ssl libraries directly, but load sdk libraries instead. Then I use `dlsym` to extract symbols from sdk library, then call forward user's call to it.
+That means, `libwrapper_a.so` and `libwrapper_b.so` do not link to sdk and ssl libraries directly, but load sdk libraries instead. Then I use `dlsym` to extract symbols from sdk library, then forward user's call to it.
 
 Fortuately, it runs well in my computer.
 
