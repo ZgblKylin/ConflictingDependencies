@@ -1,5 +1,11 @@
 #include "wrapper_a.h"
 
+#ifndef SDK_USE_WRAPPER
+
+int wrapper_a_dummy_make_compiler_happy_for_empty_source_;
+
+#else  // SDK_USE_WRAPPER
+
 #include <stddef.h>
 #include <dlfcn.h>
 
@@ -36,3 +42,5 @@ void WRAPPER_A_library_cleanup() {
   SDK_A_library_cleanup_ptr();
   dlclose(SDK_A_dll_handle);
 }
+
+#endif  // SDK_USE_WRAPPER

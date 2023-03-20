@@ -18,3 +18,9 @@ target_compile_options(wrapper_a PRIVATE -fvisibility=hidden)
 target_compile_definitions(wrapper_a
   PRIVATE WRAPPER_A_DLL_COMPILE=1
 )
+
+if(CONFLICT_RESOLVE)
+  target_compile_definitions(wrapper_a PUBLIC SDK_USE_WRAPPER=1)
+else()
+  target_link_libraries(wrapper_a PUBLIC sdk_a)
+endif()
