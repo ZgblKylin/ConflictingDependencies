@@ -4,4 +4,7 @@ add_library(ssl_b SHARED)
 
 target_sources(ssl_b PRIVATE ssl.h ssl.c)
 
-# target_compile_options(ssl_b PUBLIC -fPIC)
+set_target_properties(ssl_b PROPERTIES
+  VERSION 1.2.3
+  SOVERSION 1
+)
