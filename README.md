@@ -72,6 +72,6 @@ cd ../bin
 ## New Dependency Structure
 
 ```text
-Main App -- libwrapper_a.so --(dyload)-- libsdk_a.so -- libssl_a.so
+Main App -- libwrapper_a.so --(dlopen)-- libsdk_a.so -- libssl_a.so
          \
-          - libwrapper_b.so --(dyload)-- libsdk_b.so -- libssl_b.so
+          - libwrapper_b.so --(dlopen)-- libsdk_b.so -- libssl_b.so
